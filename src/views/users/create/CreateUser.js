@@ -31,7 +31,7 @@ const CreateUser = () => {
                             <CFormSelect 
                                 aria-label="Default select example"
                                 options={[
-                                    'Open this select menu',
+                                    'Select the role',
                                     { label: 'Admin', value: '1' },
                                     { label: 'Aircraft Engineer', value: '2' },
                                     { label: 'Aircraft Maintenance Engineer', value: '3' }

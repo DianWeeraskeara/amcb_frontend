@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import classNames from 'classnames'
 
 import {
@@ -53,6 +53,7 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import MainChart from './MainChart'
+import axios from 'axios'
 
 const Dashboard = () => {
   const progressExample = [
@@ -78,109 +79,133 @@ const Dashboard = () => {
     { title: 'Female', icon: cilUserFemale, value: 43 },
   ]
 
-  const progressGroupExample3 = [
-    { title: 'Organic Search', icon: cibGoogle, percent: 56, value: '191,235' },
-    { title: 'Facebook', icon: cibFacebook, percent: 15, value: '51,223' },
-    { title: 'Twitter', icon: cibTwitter, percent: 11, value: '37,564' },
-    { title: 'LinkedIn', icon: cibLinkedin, percent: 8, value: '27,319' },
-  ]
+  // const progressGroupExample3 = [
+  //   { title: 'Organic Search', icon: cibGoogle, percent: 56, value: '191,235' },
+  //   { title: 'Facebook', icon: cibFacebook, percent: 15, value: '51,223' },
+  //   { title: 'Twitter', icon: cibTwitter, percent: 11, value: '37,564' },
+  //   { title: 'LinkedIn', icon: cibLinkedin, percent: 8, value: '27,319' },
+  // ]
 
-  const tableExample = [
-    {
-      avatar: { src: avatar1, status: 'success' },
-      user: {
-        name: 'Yiorgos Avraamu',
-        new: true,
-        registered: 'Jan 1, 2023',
-      },
-      country: { name: 'USA', flag: cifUs },
-      usage: {
-        value: 50,
-        period: 'Jun 11, 2023 - Jul 10, 2023',
-        color: 'success',
-      },
-      payment: { name: 'Mastercard', icon: cibCcMastercard },
-      activity: '10 sec ago',
-    },
-    {
-      avatar: { src: avatar2, status: 'danger' },
-      user: {
-        name: 'Avram Tarasios',
-        new: false,
-        registered: 'Jan 1, 2023',
-      },
-      country: { name: 'Brazil', flag: cifBr },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2023 - Jul 10, 2023',
-        color: 'info',
-      },
-      payment: { name: 'Visa', icon: cibCcVisa },
-      activity: '5 minutes ago',
-    },
-    {
-      avatar: { src: avatar3, status: 'warning' },
-      user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2023' },
-      country: { name: 'India', flag: cifIn },
-      usage: {
-        value: 74,
-        period: 'Jun 11, 2023 - Jul 10, 2023',
-        color: 'warning',
-      },
-      payment: { name: 'Stripe', icon: cibCcStripe },
-      activity: '1 hour ago',
-    },
-    {
-      avatar: { src: avatar4, status: 'secondary' },
-      user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2023' },
-      country: { name: 'France', flag: cifFr },
-      usage: {
-        value: 98,
-        period: 'Jun 11, 2023 - Jul 10, 2023',
-        color: 'danger',
-      },
-      payment: { name: 'PayPal', icon: cibCcPaypal },
-      activity: 'Last month',
-    },
-    {
-      avatar: { src: avatar5, status: 'success' },
-      user: {
-        name: 'Agapetus Tadeáš',
-        new: true,
-        registered: 'Jan 1, 2023',
-      },
-      country: { name: 'Spain', flag: cifEs },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2023 - Jul 10, 2023',
-        color: 'primary',
-      },
-      payment: { name: 'Google Wallet', icon: cibCcApplePay },
-      activity: 'Last week',
-    },
-    {
-      avatar: { src: avatar6, status: 'danger' },
-      user: {
-        name: 'Friderik Dávid',
-        new: true,
-        registered: 'Jan 1, 2023',
-      },
-      country: { name: 'Poland', flag: cifPl },
-      usage: {
-        value: 43,
-        period: 'Jun 11, 2023 - Jul 10, 2023',
-        color: 'success',
-      },
-      payment: { name: 'Amex', icon: cibCcAmex },
-      activity: 'Last week',
-    },
-  ]
+  // const tableExample = [
+  //   {
+  //     avatar: { src: avatar1, status: 'success' },
+  //     user: {
+  //       name: 'Yiorgos Avraamu',
+  //       new: true,
+  //       registered: 'Jan 1, 2023',
+  //     },
+  //     country: { name: 'USA', flag: cifUs },
+  //     usage: {
+  //       value: 50,
+  //       period: 'Jun 11, 2023 - Jul 10, 2023',
+  //       color: 'success',
+  //     },
+  //     payment: { name: 'Mastercard', icon: cibCcMastercard },
+  //     activity: '10 sec ago',
+  //   },
+  //   {
+  //     avatar: { src: avatar2, status: 'danger' },
+  //     user: {
+  //       name: 'Avram Tarasios',
+  //       new: false,
+  //       registered: 'Jan 1, 2023',
+  //     },
+  //     country: { name: 'Brazil', flag: cifBr },
+  //     usage: {
+  //       value: 22,
+  //       period: 'Jun 11, 2023 - Jul 10, 2023',
+  //       color: 'info',
+  //     },
+  //     payment: { name: 'Visa', icon: cibCcVisa },
+  //     activity: '5 minutes ago',
+  //   },
+  //   {
+  //     avatar: { src: avatar3, status: 'warning' },
+  //     user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2023' },
+  //     country: { name: 'India', flag: cifIn },
+  //     usage: {
+  //       value: 74,
+  //       period: 'Jun 11, 2023 - Jul 10, 2023',
+  //       color: 'warning',
+  //     },
+  //     payment: { name: 'Stripe', icon: cibCcStripe },
+  //     activity: '1 hour ago',
+  //   },
+  //   {
+  //     avatar: { src: avatar4, status: 'secondary' },
+  //     user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2023' },
+  //     country: { name: 'France', flag: cifFr },
+  //     usage: {
+  //       value: 98,
+  //       period: 'Jun 11, 2023 - Jul 10, 2023',
+  //       color: 'danger',
+  //     },
+  //     payment: { name: 'PayPal', icon: cibCcPaypal },
+  //     activity: 'Last month',
+  //   },
+  //   {
+  //     avatar: { src: avatar5, status: 'success' },
+  //     user: {
+  //       name: 'Agapetus Tadeáš',
+  //       new: true,
+  //       registered: 'Jan 1, 2023',
+  //     },
+  //     country: { name: 'Spain', flag: cifEs },
+  //     usage: {
+  //       value: 22,
+  //       period: 'Jun 11, 2023 - Jul 10, 2023',
+  //       color: 'primary',
+  //     },
+  //     payment: { name: 'Google Wallet', icon: cibCcApplePay },
+  //     activity: 'Last week',
+  //   },
+  //   {
+  //     avatar: { src: avatar6, status: 'danger' },
+  //     user: {
+  //       name: 'Friderik Dávid',
+  //       new: true,
+  //       registered: 'Jan 1, 2023',
+  //     },
+  //     country: { name: 'Poland', flag: cifPl },
+  //     usage: {
+  //       value: 43,
+  //       period: 'Jun 11, 2023 - Jul 10, 2023',
+  //       color: 'success',
+  //     },
+  //     payment: { name: 'Amex', icon: cibCcAmex },
+  //     activity: 'Last week',
+  //   },
+  // ]
+
+  const [aircraftData, setAircraftData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAircraftData()
+  },[]);
+
+  const fetchAircraftData = async() => {
+    try {
+      const response = await axios.get("http://localhost:9000/api/aircraft");
+      const allData = response.data.map(aircraft=> ({
+        id: aircraft.id,
+        aircraft_model: aircraft.aircraft_model,
+        registration_number: aircraft.registration_number,
+        last_maintenance_date: aircraft.last_maintenance_date
+      }));
+      console.log(allData);
+      setAircraftData(allData)
+      setLoading(false)
+    } catch (error) {
+      console.error("Error fetching aircraft types:", error);
+    }
+  }
 
   return (
     <>
       <WidgetsDropdown className="mb-4" />
       <CCard className="mb-4">
-        <CCardBody>
+        {/* <CCardBody>
           <CRow>
             <CCol sm={5}>
               <h4 id="traffic" className="card-title mb-0">
@@ -207,8 +232,8 @@ const Dashboard = () => {
             </CCol>
           </CRow>
           <MainChart />
-        </CCardBody>
-        <CCardFooter>
+        </CCardBody> */}
+        {/* <CCardFooter>
           <CRow
             xs={{ cols: 1, gutter: 4 }}
             sm={{ cols: 2 }}
@@ -231,15 +256,15 @@ const Dashboard = () => {
               </CCol>
             ))}
           </CRow>
-        </CCardFooter>
+        </CCardFooter> */}
       </CCard>
-      <WidgetsBrand className="mb-4" withCharts />
+      {/* <WidgetsBrand className="mb-4" withCharts /> */}
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Traffic {' & '} Sales</CCardHeader>
+            <CCardHeader>Aircrafts {' & '} Predictions</CCardHeader>
             <CCardBody>
-              <CRow>
+              {/* <CRow>
                 <CCol xs={12} md={6} xl={6}>
                   <CRow>
                     <CCol xs={6}>
@@ -319,7 +344,7 @@ const Dashboard = () => {
                     </div>
                   ))}
                 </CCol>
-              </CRow>
+              </CRow> */}
 
               <br />
 
@@ -327,20 +352,32 @@ const Dashboard = () => {
                 <CTableHead className="text-nowrap">
                   <CTableRow>
                     <CTableHeaderCell className="bg-body-tertiary text-center">
-                      <CIcon icon={cilPeople} />
+                      {/* <CIcon icon={cilPeople} /> */}
+                      <CTableHeaderCell className="bg-body-tertiary">ID</CTableHeaderCell>
                     </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">User</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Aircraft Name</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary text-center">
-                      Country
+                      Registration Number
                     </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Usage</CTableHeaderCell>
+                    {/* <CTableHeaderCell className="bg-body-tertiary">Usage</CTableHeaderCell> */}
                     <CTableHeaderCell className="bg-body-tertiary text-center">
-                      Payment Method
+                      Last Maintenance Date
                     </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Activity</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Predictied Maintenace Type</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
+                {aircraftData.map((aircraft) => (
                 <CTableBody>
+                  <CTableRow key={aircraft.id}>
+                  <CTableDataCell className="text-center">{aircraft.id}</CTableDataCell>
+                  <CTableDataCell className="text-center">{aircraft.aircraft_model}</CTableDataCell>
+                  <CTableDataCell className="text-center">{aircraft.registration_number}</CTableDataCell>
+                  <CTableDataCell className="text-center">{aircraft.last_maintenance_date}</CTableDataCell>
+                  <CTableDataCell className="text-center">-</CTableDataCell>
+                  </CTableRow>
+                </CTableBody>
+                ))}
+                {/* <CTableBody>
                   {tableExample.map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>
                       <CTableDataCell className="text-center">
@@ -374,7 +411,7 @@ const Dashboard = () => {
                       </CTableDataCell>
                     </CTableRow>
                   ))}
-                </CTableBody>
+                </CTableBody> */}
               </CTable>
             </CCardBody>
           </CCard>
